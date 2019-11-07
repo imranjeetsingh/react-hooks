@@ -9,10 +9,19 @@ const Ingredients = () =>{
   const [userIngrdients, setUserIngrdients]  = useState([]);
 
   const ingredientsAddHandler = ingredients =>{
-    setUserIngrdients(prevIngrdients =>[
-      ...prevIngrdients,
-      {id:Math.random().toString(),...ingredients}
-    ])
+    fetch('https://react-burger-app-ab541.firebaseio.com/orders.json',{
+      method : 'POST',
+      body : JSON.stringify(ingredients),
+      headers : {'Content-Type' : 'application/json'}
+    }).then(response =>{
+        return response.json()
+    }).then(resData =>{
+      setUserIngrdients(prevIngrdients =>[
+        ...prevIngrdients,
+        {id:resData.name,...ingredients}
+      ])
+    })    
+    
   }
 
   return (
