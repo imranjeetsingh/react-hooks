@@ -1,16 +1,26 @@
-import React from 'react';
+import React,{useState} from 'react';
 
 import IngredientForm from './IngredientForm';
+import IngredientList from './IngredientList';
 import Search from './Search';
 
-function Ingredients() {
+const Ingredients = () =>{
+
+  const [userIngrdients, setUserIngrdients]  = useState([]);
+
+  const ingredientsAddHandler = ingredients =>{
+    setUserIngrdients(prevIngrdients =>[
+      ...prevIngrdients,
+      {id:Math.random().toString(),...ingredients}
+    ])
+  }
+
   return (
     <div className="App">
-      <IngredientForm />
-
+      <IngredientForm ingredientsAddHandler = {ingredientsAddHandler}/>
       <section>
         <Search />
-        {/* Need to add list here! */}
+        <IngredientList ingredients={userIngrdients} onRemoveItem = {()=>{}} />
       </section>
     </div>
   );
