@@ -1,13 +1,27 @@
-import React,{useState, useEffect, useCallback} from 'react';
+import React,{useState, useEffect, useCallback,useReducer} from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
 import Search from './Search';
 import ErrorModal from '../UI/ErrorModal';
 
-const Ingredients = () =>{
+const ingredientReducer = (currentState, action) =>{
+  console.log(currentState)
+  switch(action.type){
+      case 'SET':
+        return action.ingredients;
+      case 'ADD':
+        return [...currentState,action.ingredients];
+      case 'DELETE':
+        return currentState.filter(ing => ing.id !==action.id)
+      default :
+        throw new Error("Something wrong");
+  }
+}
 
-  const [userIngrdients, setUserIngrdients]  = useState([]);
+const Ingredients = () =>{
+  const [userIngrdients, dispatch] = useReducer(ingredientReducer,[])
+  // const [userIngrdients, setUserIngrdients]  = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState();
   
@@ -22,10 +36,14 @@ const Ingredients = () =>{
         setIsLoading(false)
         return response.json()
     }).then(resData =>{
-      setUserIngrdients(prevIngrdients =>[
-        ...prevIngrdients,
-        {id:resData.name,...ingredients}
-      ])
+      // setUserIngrdients(prevIngrdients =>[
+      //   ...prevIngrdients,
+      //   {id:resData.name,...ingredients}
+      // ])
+      dispatch({
+        type:'ADD',
+        ingredients : ingredients
+      })
     })    
     
   }
@@ -36,9 +54,10 @@ const Ingredients = () =>{
       method: 'DELETE'
     }).then(response=>{
       setIsLoading(false) 
-      setUserIngrdients(prevIngredients =>
-        prevIngredients.filter((ingredient) =>
-          ingredient.id !== ingredientId))
+      dispatch({
+        type:'DELETE',
+        id : ingredientId
+      })
     }).catch(error =>{
       setIsError(error.message);
       setIsLoading(false);
@@ -46,7 +65,10 @@ const Ingredients = () =>{
   }
 
   const onLoadIngredientsHandler =useCallback(ingredients =>{
-    setUserIngrdients(ingredients)
+    dispatch({
+      type:'SET',
+      ingredients : ingredients
+    })
   },[]);
 
   const clearError =() =>{
