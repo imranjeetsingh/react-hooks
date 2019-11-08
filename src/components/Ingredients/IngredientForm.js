@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 
 import Card from '../UI/Card';
 import './IngredientForm.css';
+import Spinner from '../UI/LoadingIndicator';
 
 const IngredientForm = React.memo(props => {
   
@@ -12,7 +13,7 @@ const IngredientForm = React.memo(props => {
     event.preventDefault();
     props.ingredientsAddHandler({title:enterdTitle,amount:enteredAmount})
   };
-
+  console.log(props.isLoading)
   return (
     <section className="ingredient-form">
       <Card>
@@ -35,6 +36,7 @@ const IngredientForm = React.memo(props => {
           </div>
           <div className="ingredient-form__actions">
             <button type="submit">Add Ingredient</button>
+            {props.isLoading ? <Spinner /> : null}
           </div>
         </form>
       </Card>
