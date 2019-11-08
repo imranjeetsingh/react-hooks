@@ -19,7 +19,7 @@ const ingredientReducer = (currentState, action) =>{
   }
 }
 
-const Ingredients = () =>{
+const Ingredients = React.memo(props =>{
   const [userIngrdients, dispatch] = useReducer(ingredientReducer,[])
   // console.log(userIngrdients)
   // const [userIngrdients, setUserIngrdients]  = useState([]);
@@ -27,7 +27,7 @@ const Ingredients = () =>{
   const [isError, setIsError] = useState();
   
 
-  const ingredientsAddHandler = ingredients =>{
+  const ingredientsAddHandler = useCallback(ingredients =>{
     setIsLoading(true)
     fetch('https://react-burger-app-ab541.firebaseio.com/orders.json',{
       method : 'POST',
@@ -47,9 +47,9 @@ const Ingredients = () =>{
       })
     })    
     
-  }
+  },[])
   // console.log(isLoading)
-  const removeIngredientsHandler = ingredientId => {
+  const removeIngredientsHandler = useCallback(ingredientId => {
     setIsLoading(true)
     fetch(`https://react-burger-app-ab541.firebaseio.com/orders/${ingredientId}.json`, {
       method: 'DELETE'
@@ -63,7 +63,7 @@ const Ingredients = () =>{
       setIsError(error.message);
       setIsLoading(false);
     })
-  }
+  },[])
 
   const onLoadIngredientsHandler =useCallback(ingredients =>{
     dispatch({
@@ -85,6 +85,6 @@ const Ingredients = () =>{
       </section>
     </div>
   );
-}
+})
 
 export default Ingredients;
