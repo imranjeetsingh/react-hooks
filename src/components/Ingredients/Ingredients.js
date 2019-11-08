@@ -21,6 +21,7 @@ const ingredientReducer = (currentState, action) =>{
 
 const Ingredients = () =>{
   const [userIngrdients, dispatch] = useReducer(ingredientReducer,[])
+  // console.log(userIngrdients)
   // const [userIngrdients, setUserIngrdients]  = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState();
