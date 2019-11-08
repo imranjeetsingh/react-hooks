@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useCallback} from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
@@ -8,23 +8,7 @@ const Ingredients = () =>{
 
   const [userIngrdients, setUserIngrdients]  = useState([]);
 
-    useEffect(() =>{
-      fetch('https://react-burger-app-ab541.firebaseio.com/orders.json')
-      .then(response => response.json())
-      .then(responseData =>{
-        const ingredientsLoaded = []
-        // console.log(responseData)
-        for(const ing in responseData){
-          ingredientsLoaded.push({
-            id: ing,
-            title : responseData[ing].title,
-            amount : responseData[ing].amount
-          })
-        }
-        // console.log(ingredientsLoaded)
-        setUserIngrdients(ingredientsLoaded);
-      })
-    },[]);
+  
 
   const ingredientsAddHandler = ingredients =>{
     fetch('https://react-burger-app-ab541.firebaseio.com/orders.json',{
@@ -48,11 +32,15 @@ const Ingredients = () =>{
             ingredient.id !== ingredientId))
   }
 
+  const onLoadIngredientsHandler =useCallback(ingredients =>{
+    setUserIngrdients(ingredients)
+  },[]);
+
   return (
     <div className="App">
       <IngredientForm ingredientsAddHandler = {ingredientsAddHandler}/>
       <section>
-        <Search />
+        <Search onLoadIngredients = {onLoadIngredientsHandler} />
         <IngredientList ingredients={userIngrdients} onRemoveItem = {removeIngredientsHandler} />
       </section>
     </div>
