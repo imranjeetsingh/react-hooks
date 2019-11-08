@@ -26,10 +26,14 @@ const Ingredients = () =>{
     
   }
 
-  const removeIngredientsHandler = ingredientId =>{
-        setUserIngrdients(prevIngredients=> 
-            prevIngredients.filter((ingredient)=>
-            ingredient.id !== ingredientId))
+  const removeIngredientsHandler = ingredientId => {
+    fetch(`https://react-burger-app-ab541.firebaseio.com/orders/${ingredientId}.json`, {
+      method: 'DELETE'
+    }).then(response=>{ 
+      setUserIngrdients(prevIngredients =>
+        prevIngredients.filter((ingredient) =>
+          ingredient.id !== ingredientId))
+    })
   }
 
   const onLoadIngredientsHandler =useCallback(ingredients =>{
